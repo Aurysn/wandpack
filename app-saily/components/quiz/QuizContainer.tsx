@@ -94,7 +94,7 @@ export default function QuizContainer() {
     <div className="flex flex-col gap-8">
       <ProgressBar currentStep={step} totalSteps={5} />
       {error && (
-        <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-xl bg-red-950/60 border border-red-800/50 px-4 py-3 text-sm text-red-300">
           {error}
         </div>
       )}

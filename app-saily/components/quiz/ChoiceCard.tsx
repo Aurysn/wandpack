@@ -13,8 +13,8 @@ export default function ChoiceCard({ emoji, label, selected, onClick }: ChoiceCa
       onClick={onClick}
       className={`flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200 w-full cursor-pointer ${
         selected
-          ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-          : 'border-gray-200 bg-white text-gray-700 hover:border-indigo-300 hover:bg-gray-50'
+          ? 'border-brand-gold bg-brand-surface-hover text-brand-gold shadow-gold'
+          : 'border-brand-border bg-brand-surface text-brand-text-secondary hover:border-brand-gold/40 hover:bg-brand-surface-hover hover:text-white'
       }`}
     >
       <span className="text-3xl">{emoji}</span>

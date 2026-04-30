@@ -52,7 +52,8 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
           return
         } catch {
           if (i === MAX_ATTEMPTS) {
-            if (!cancelled) onError('Sorry, we could not generate your packing list. Please try again.')
+            if (!cancelled)
+              onError('Sorry, we could not generate your packing list. Please try again.')
           }
         }
       }
@@ -67,19 +68,19 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
   // Run once on mount only — callbacks are stable for the lifetime of this screen
   }, [])
 
-  const subtext = retrying || attempt > 1
-    ? 'Still working on it...'
-    : 'Checking the weather and thinking smart'
+  const subtext =
+    retrying || attempt > 1 ? 'Still working on it...' : 'Weaving your perfect packing spell...'
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <div className="relative w-16 h-16">
-        <div className="absolute inset-0 rounded-full border-4 border-indigo-200" />
-        <div className="absolute inset-0 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin" />
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8">
+      <div className="relative w-20 h-20">
+        <div className="absolute inset-0 rounded-full border-4 border-brand-border" />
+        <div className="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin" />
+        <div className="absolute inset-3 rounded-full border-2 border-brand-gold/20 border-b-brand-gold/60 animate-spin [animation-direction:reverse] [animation-duration:1.5s]" />
       </div>
       <div className="text-center">
-        <p className="text-lg font-semibold text-gray-900">Building your packing list...</p>
-        <p className="text-sm text-gray-500 mt-1">{subtext}</p>
+        <p className="text-lg font-semibold text-white">Building your packing list...</p>
+        <p className="text-sm text-brand-text-secondary mt-1">{subtext}</p>
       </div>
     </div>
   )

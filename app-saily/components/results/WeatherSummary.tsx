@@ -7,7 +7,7 @@ interface WeatherSummaryProps {
 export default function WeatherSummary({ weather }: WeatherSummaryProps) {
   if (!weather) {
     return (
-      <div className="rounded-2xl bg-gray-100 px-5 py-4 text-center text-gray-500 text-sm">
+      <div className="rounded-2xl bg-brand-surface/60 border border-brand-border px-5 py-4 text-center text-brand-text-muted text-sm">
         Weather data unavailable — packing list based on your preferences only.
       </div>
     )
@@ -18,17 +18,19 @@ export default function WeatherSummary({ weather }: WeatherSummaryProps) {
       ? `${weather.tempMin}–${weather.tempMax}°C`
       : `${weather.temperature}°C`
 
-  const subtext = weather.isForecast ? `avg ${weather.temperature}°C · forecast for your trip` : 'current conditions'
+  const subtext = weather.isForecast
+    ? `avg ${weather.temperature}°C · forecast for your trip`
+    : 'current conditions'
 
   return (
-    <div className="rounded-2xl bg-indigo-50 border border-indigo-100 px-5 py-4 flex items-center gap-3">
-      <span className="text-3xl">🌤️</span>
+    <div className="rounded-2xl bg-brand-surface/80 border border-brand-border/60 px-5 py-4 flex items-center gap-4 backdrop-blur-sm">
+      <span className="text-3xl shrink-0">🌤️</span>
       <div>
-        <p className="font-semibold text-gray-900">
+        <p className="font-semibold text-white">
           {weather.city} · {tempDisplay}
         </p>
-        <p className="text-sm text-gray-600 capitalize">{weather.description}</p>
-        <p className="text-xs text-indigo-400 mt-0.5">{subtext}</p>
+        <p className="text-sm text-brand-text-secondary capitalize">{weather.description}</p>
+        <p className="text-xs text-brand-text-muted mt-0.5">{subtext}</p>
       </div>
     </div>
   )

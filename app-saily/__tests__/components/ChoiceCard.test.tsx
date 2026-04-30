@@ -19,6 +19,6 @@ describe('ChoiceCard', () => {
     const { container } = render(
       <ChoiceCard emoji="🏖️" label="Beach" selected={true} onClick={jest.fn()} />
     )
-    expect(container.firstChild).toHaveClass('border-indigo-600')
+    expect(container.firstChild).toHaveClass('border-brand-gold')
   })
 })

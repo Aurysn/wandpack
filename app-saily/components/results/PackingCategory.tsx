@@ -16,8 +16,8 @@ export default function PackingCategory({
   onToggle,
 }: PackingCategoryProps) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4">
-      <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+    <div className="rounded-2xl border border-brand-border bg-brand-surface p-4">
+      <h3 className="font-semibold text-brand-gold mb-3 flex items-center gap-2">
         <span>{emoji}</span> {title}
       </h3>
       <ul className="flex flex-col gap-2">
@@ -31,11 +31,11 @@ export default function PackingCategory({
                   type="checkbox"
                   checked={checked}
                   onChange={() => onToggle(key)}
-                  className="w-4 h-4 rounded accent-indigo-600 cursor-pointer"
+                  className="w-4 h-4 rounded checkbox-gold cursor-pointer shrink-0"
                 />
                 <span
                   className={`text-sm transition-colors ${
-                    checked ? 'line-through text-gray-400' : 'text-gray-700'
+                    checked ? 'line-through text-brand-text-muted' : 'text-white'
                   }`}
                 >
                   {item}

@@ -58,7 +58,7 @@ export default function ResultsScreen({
       ))}
       <button
         onClick={onStartOver}
-        className="w-full py-3 rounded-xl border-2 border-gray-200 text-gray-700 font-semibold hover:border-indigo-400 hover:text-indigo-600 transition-colors"
+        className="w-full py-3 rounded-xl border-2 border-brand-border text-brand-text-secondary font-semibold hover:border-brand-gold hover:text-brand-gold transition-colors"
       >
         Start over
       </button>

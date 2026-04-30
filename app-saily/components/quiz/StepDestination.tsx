@@ -5,6 +5,11 @@ import type { CitySuggestion } from '@/lib/types'
 
 const today = new Date().toLocaleDateString('en-CA')
 
+const inputClass =
+  'w-full px-4 py-3 rounded-xl border-2 border-brand-border bg-brand-surface focus:border-brand-gold focus:outline-none text-white placeholder-brand-text-muted transition-colors'
+
+const labelClass = 'block text-sm font-medium text-brand-text-secondary mb-1'
+
 interface StepDestinationProps {
   initialDestination?: string
   initialDays?: number
@@ -44,18 +49,14 @@ export default function StepDestination({
       setActiveIndex((i) => Math.max(i - 1, 0))
     } else if (e.key === 'Enter') {
       e.preventDefault()
-      if (activeIndex >= 0) {
-        selectCity(suggestions[activeIndex])
-      } else if (suggestions.length === 1) {
-        selectCity(suggestions[0])
-      }
+      if (activeIndex >= 0) selectCity(suggestions[activeIndex])
+      else if (suggestions.length === 1) selectCity(suggestions[0])
     } else if (e.key === 'Escape') {
       clear()
       setActiveIndex(-1)
     }
   }
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -70,8 +71,8 @@ export default function StepDestination({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Where are you going?</h2>
-        <p className="text-gray-500 text-sm">Enter your destination city</p>
+        <h2 className="text-2xl font-bold text-white mb-1">Where are you going?</h2>
+        <p className="text-brand-text-secondary text-sm">Enter your destination city</p>
       </div>
       <div className="flex flex-col gap-4">
         {/* City input with autocomplete */}
@@ -86,12 +87,12 @@ export default function StepDestination({
             }}
             onKeyDown={handleKeyDown}
             autoComplete="off"
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-gray-900 placeholder-gray-400 transition-colors"
+            className={inputClass}
           />
           {suggestions.length > 0 && (
             <ul
               ref={dropdownRef}
-              className="absolute z-50 mt-1 w-full rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden"
+              className="absolute z-50 mt-1 w-full rounded-xl border border-brand-border bg-brand-surface shadow-xl overflow-hidden"
             >
               {suggestions.map((city, idx) => (
                 <li key={`${city.lat}-${city.lon}`}>
@@ -103,12 +104,12 @@ export default function StepDestination({
                     }}
                     className={`w-full text-left px-4 py-3 text-sm transition-colors ${
                       idx === activeIndex
-                        ? 'bg-indigo-50 text-indigo-700'
-                        : 'text-gray-900 hover:bg-indigo-50 hover:text-indigo-700'
+                        ? 'bg-brand-surface-hover text-brand-gold'
+                        : 'text-white hover:bg-brand-surface-hover hover:text-brand-gold'
                     }`}
                   >
                     <span className="font-medium">{city.name}</span>
-                    <span className="ml-2 text-xs text-gray-400">
+                    <span className="ml-2 text-xs text-brand-text-muted">
                       {city.country}
                       {city.state ? ` · ${city.state}` : ''}
                     </span>
@@ -121,19 +122,19 @@ export default function StepDestination({
 
         {/* Departure date */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Departure date</label>
+          <label className={labelClass}>Departure date</label>
           <input
             type="date"
             min={today}
             value={departureDate}
             onChange={(e) => setDepartureDate(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-gray-900 transition-colors"
+            className={inputClass}
           />
         </div>
 
         {/* Trip duration */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">How many days?</label>
+          <label className={labelClass}>How many days?</label>
           <input
             type="number"
             min={1}
@@ -143,14 +144,14 @@ export default function StepDestination({
               const val = parseInt(e.target.value, 10)
               setDays(isNaN(val) ? 1 : Math.max(1, val))
             }}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-gray-900 transition-colors"
+            className={inputClass}
           />
         </div>
       </div>
       <button
         onClick={() => onNext(inputValue.trim(), days, departureDate)}
         disabled={!canContinue}
-        className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
+        className="w-full py-3 rounded-xl bg-brand-gold text-brand-bg font-bold tracking-wide disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-gold-hover transition-colors"
       >
         Continue
       </button>

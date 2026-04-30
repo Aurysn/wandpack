@@ -20,8 +20,8 @@ export default function StepBaggage({ initialValue, onNext }: StepBaggageProps) 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">What baggage are you bringing?</h2>
-        <p className="text-gray-500 text-sm">Choose your luggage setup</p>
+        <h2 className="text-2xl font-bold text-white mb-1">What baggage are you bringing?</h2>
+        <p className="text-brand-text-secondary text-sm">Choose your luggage setup</p>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {OPTIONS.map((opt) => (
@@ -37,7 +37,7 @@ export default function StepBaggage({ initialValue, onNext }: StepBaggageProps) 
       <button
         onClick={() => selected && onNext(selected)}
         disabled={!selected}
-        className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
+        className="w-full py-3 rounded-xl bg-brand-gold text-brand-bg font-bold tracking-wide disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-gold-hover transition-colors"
       >
         Continue
       </button>
