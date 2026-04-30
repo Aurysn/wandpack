@@ -9,7 +9,7 @@ interface StepBaggageProps {
 }
 
 const OPTIONS: { value: BaggageType; emoji: string; label: string }[] = [
-  { value: 'hand', emoji: '👜', label: 'Hand luggage only' },
+  { value: 'hand', emoji: '👜', label: 'Hand luggage' },
   { value: 'checked', emoji: '🧳', label: 'Checked bag' },
   { value: 'both', emoji: '✈️', label: 'Both' },
 ]
