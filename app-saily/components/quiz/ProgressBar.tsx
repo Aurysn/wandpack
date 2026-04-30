@@ -6,7 +6,7 @@ interface ProgressBarProps {
 export default function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
   return (
     <div className="w-full">
-      <p className="text-xs text-brand-text-muted mb-2 text-center tracking-widest uppercase">
+      <p className="text-xs text-brand-text-secondary mb-2 text-center tracking-wider uppercase">
         Step {currentStep} of {totalSteps}
       </p>
       <div className="flex gap-1.5">
