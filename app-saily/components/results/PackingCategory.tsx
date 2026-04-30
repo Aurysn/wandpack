@@ -21,11 +21,11 @@ export default function PackingCategory({
         <span>{emoji}</span> {title}
       </h3>
       <ul className="flex flex-col gap-2">
-        {items.map((item) => {
-          const key = `${title}:${item}`
+        {items.map((item, idx) => {
+          const key = `${title}:${idx}:${item}`
           const checked = checkedItems.has(key)
           return (
-            <li key={item}>
+            <li key={key}>
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"

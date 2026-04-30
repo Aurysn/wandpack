@@ -44,7 +44,7 @@ export default function ResultsScreen({
 
   return (
     <div className="flex flex-col gap-4">
-      <WeatherSummary weather={weather} destination={destination} />
+      <WeatherSummary weather={weather} />
       <PackingProgress packed={checkedItems.size} total={totalItems} />
       {CATEGORIES.map((cat) => (
         <PackingCategory
