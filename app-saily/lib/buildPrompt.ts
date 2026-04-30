@@ -1,14 +1,14 @@
 import type { QuizAnswers, WeatherData } from './types'
 
 const BAGGAGE_LABELS: Record<QuizAnswers['baggage'], string> = {
-  hand: 'hand luggage only',
-  checked: 'checked bag',
-  both: 'both hand luggage and checked bag',
+  hand: 'Hand luggage only',
+  checked: 'Checked bag',
+  both: 'Both hand luggage and checked bag',
 }
 
 const TRIP_LABELS: Record<QuizAnswers['tripType'], string> = {
   beach: 'Beach',
-  city: 'city trip',
+  city: 'City trip',
   business: 'Business',
   hiking: 'Hiking',
 }
