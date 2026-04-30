@@ -1,7 +1,10 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchWeather } from '@/lib/weather'
 import type { QuizAnswers, WeatherData, PackingList } from '@/lib/types'
+
+const MAX_ATTEMPTS = 4
+const RETRY_DELAY_MS = 3000
 
 interface LoadingScreenProps {
   answers: QuizAnswers
@@ -10,30 +13,65 @@ interface LoadingScreenProps {
 }
 
 export default function LoadingScreen({ answers, onComplete, onError }: LoadingScreenProps) {
+  const [attempt, setAttempt] = useState(1)
+  const [retrying, setRetrying] = useState(false)
+
   useEffect(() => {
+    let cancelled = false
+
     async function run() {
       const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY ?? ''
-      const weather = await fetchWeather(answers.destination, apiKey, answers.departureDate, answers.days)
+      const weather = await fetchWeather(
+        answers.destination,
+        apiKey,
+        answers.departureDate,
+        answers.days
+      )
 
-      try {
-        const res = await fetch('/api/generate-packing-list', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ answers, weather }),
-        })
+      for (let i = 1; i <= MAX_ATTEMPTS; i++) {
+        if (cancelled) return
 
-        if (!res.ok) throw new Error('API error')
-        const packingList: PackingList = await res.json()
-        onComplete(weather, packingList)
-      } catch {
-        onError('Sorry, we could not generate your packing list. Please try again.')
+        if (i > 1) {
+          setRetrying(true)
+          await new Promise((r) => setTimeout(r, RETRY_DELAY_MS))
+          if (cancelled) return
+          setAttempt(i)
+          setRetrying(false)
+        }
+
+        try {
+          const res = await fetch('/api/generate-packing-list', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ answers, weather }),
+          })
+
+          if (!res.ok) throw new Error('API error')
+          const packingList: PackingList = await res.json()
+          if (!cancelled) onComplete(weather, packingList)
+          return
+        } catch {
+          if (i === MAX_ATTEMPTS) {
+            if (!cancelled) onError('Sorry, we could not generate your packing list. Please try again.')
+          }
+        }
       }
     }
 
     run()
+
+    return () => {
+      cancelled = true
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // Run once on mount only — callbacks are stable for the lifetime of this screen
   }, [])
+
+  const subtext = retrying
+    ? 'Retrying...'
+    : attempt > 1
+    ? `Attempt ${attempt} of ${MAX_ATTEMPTS}`
+    : 'Checking the weather and thinking smart'
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
@@ -43,7 +81,7 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
       </div>
       <div className="text-center">
         <p className="text-lg font-semibold text-gray-900">Building your packing list...</p>
-        <p className="text-sm text-gray-500 mt-1">Checking the weather and thinking smart</p>
+        <p className="text-sm text-gray-500 mt-1">{subtext}</p>
       </div>
     </div>
   )
