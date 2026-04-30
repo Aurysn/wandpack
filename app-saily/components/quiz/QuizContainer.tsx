@@ -20,8 +20,8 @@ export default function QuizContainer() {
   const [packingList, setPackingList] = useState<PackingList | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  function handleDestination(destination: string, days: number) {
-    setAnswers((prev) => ({ ...prev, destination, days }))
+  function handleDestination(destination: string, days: number, departureDate: string) {
+    setAnswers((prev) => ({ ...prev, destination, days, departureDate }))
     setError(null)
     setStep(2)
   }
@@ -103,6 +103,7 @@ export default function QuizContainer() {
           <StepDestination
             initialDestination={answers.destination}
             initialDays={answers.days}
+            initialDepartureDate={answers.departureDate}
             onNext={handleDestination}
           />
         )}

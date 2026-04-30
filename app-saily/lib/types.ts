@@ -6,16 +6,29 @@ export type TempPreference = 'cold' | 'hot' | 'normal'
 export interface QuizAnswers {
   destination: string
   days: number
+  departureDate: string
   baggage: BaggageType
   tripType: TripType
   packingStyle: PackingStyle
   tempPreference: TempPreference
 }
 
+export interface CitySuggestion {
+  name: string
+  country: string
+  state?: string
+  lat: number
+  lon: number
+}
+
 export interface WeatherData {
   city: string
+  country: string
   temperature: number
+  tempMin?: number
+  tempMax?: number
   description: string
+  isForecast: boolean
 }
 
 export interface PackingList {

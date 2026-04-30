@@ -28,14 +28,20 @@ export function buildGeminiPrompt(
   answers: QuizAnswers,
   weather: WeatherData | null
 ): string {
-  const weatherLine = weather
-    ? `${weather.description}, ${weather.temperature}°C`
-    : 'weather data unavailable'
+  let weatherLine = 'weather data unavailable'
+  if (weather) {
+    if (weather.isForecast && weather.tempMin !== undefined && weather.tempMax !== undefined) {
+      weatherLine = `Forecast during trip: avg ${weather.temperature}°C, range ${weather.tempMin}–${weather.tempMax}°C, ${weather.description}`
+    } else {
+      weatherLine = `Current conditions: ${weather.temperature}°C, ${weather.description}`
+    }
+  }
 
   return `You are a smart travel packing assistant. Generate a packing list for the following trip:
 - Destination: ${answers.destination}
+- Departure date: ${answers.departureDate}
 - Duration: ${answers.days} days
-- Current weather: ${weatherLine}
+- Weather: ${weatherLine}
 - Baggage: ${BAGGAGE_LABELS[answers.baggage]}
 - Trip type: ${TRIP_LABELS[answers.tripType]}
 - Packing style: ${PACKING_LABELS[answers.packingStyle]}

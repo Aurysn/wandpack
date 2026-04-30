@@ -13,7 +13,7 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
   useEffect(() => {
     async function run() {
       const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY ?? ''
-      const weather = await fetchWeather(answers.destination, apiKey)
+      const weather = await fetchWeather(answers.destination, apiKey, answers.departureDate, answers.days)
 
       try {
         const res = await fetch('/api/generate-packing-list', {
