@@ -7,6 +7,10 @@
     color-scheme: dark;
   }
 
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
   body {
     background-color: #0d0b1a;
     background-image:
