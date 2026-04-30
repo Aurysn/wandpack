@@ -19,7 +19,7 @@ const config: Config = {
           "gold-hover": "#c9a230",
           "text-primary": "#ffffff",
           "text-secondary": "#9d95c4",
-          "text-muted": "#6b6490",
+          "text-muted": "#8a84b0",
         },
       },
       fontFamily: {
