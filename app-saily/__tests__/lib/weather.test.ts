@@ -44,4 +44,13 @@ describe('fetchWeather', () => {
 
     expect(result).toBeNull()
   })
+
+  it('returns null when API responds 200 with an error body', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ cod: '404', message: 'city not found' }),
+    })
+    const result = await fetchWeather('Fakecity123', 'test-api-key')
+    expect(result).toBeNull()
+  })
 })

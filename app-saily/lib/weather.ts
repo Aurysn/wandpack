@@ -5,7 +5,7 @@ export async function fetchWeather(
   apiKey: string
 ): Promise<WeatherData | null> {
   try {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${encodeURIComponent(apiKey)}`
     const res = await fetch(url)
     if (!res.ok) return null
 
