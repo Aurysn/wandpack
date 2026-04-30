@@ -23,7 +23,7 @@ export default function StepBaggage({ initialValue, onNext }: StepBaggageProps) 
         <h2 className="text-2xl font-bold text-white mb-1">What baggage are you bringing?</h2>
         <p className="text-brand-text-secondary text-sm">Choose your luggage setup</p>
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {OPTIONS.map((opt) => (
           <ChoiceCard
             key={opt.value}
