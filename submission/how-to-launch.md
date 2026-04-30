@@ -1,4 +1,4 @@
-# How to Launch Saily
+# How to Launch Tripalis Packendo
 
 ## Prerequisites
 
