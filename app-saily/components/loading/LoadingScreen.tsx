@@ -67,10 +67,8 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
   // Run once on mount only — callbacks are stable for the lifetime of this screen
   }, [])
 
-  const subtext = retrying
-    ? 'Retrying...'
-    : attempt > 1
-    ? `Attempt ${attempt} of ${MAX_ATTEMPTS}`
+  const subtext = retrying || attempt > 1
+    ? 'Still working on it...'
     : 'Checking the weather and thinking smart'
 
   return (
