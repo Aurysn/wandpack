@@ -9,8 +9,8 @@ interface StepPackingStyleProps {
 }
 
 const OPTIONS: { value: PackingStyle; emoji: string; label: string }[] = [
-  { value: 'light', emoji: '🪶', label: 'Pack light (only the essentials)' },
-  { value: 'heavy', emoji: '📦', label: 'Pack heavy (bring everything just in case)' },
+  { value: 'light', emoji: '🪶', label: 'Pack light' },
+  { value: 'heavy', emoji: '📦', label: 'Pack heavy' },
 ]
 
 export default function StepPackingStyle({ initialValue, onNext }: StepPackingStyleProps) {
