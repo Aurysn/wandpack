@@ -31,6 +31,7 @@ const config: Config = {
       },
     },
   },
+  safelist: ['font-display'],
   plugins: [],
 };
 export default config;
