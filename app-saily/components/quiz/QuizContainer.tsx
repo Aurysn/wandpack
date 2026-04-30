@@ -22,6 +22,7 @@ export default function QuizContainer() {
 
   function handleDestination(destination: string, days: number) {
     setAnswers((prev) => ({ ...prev, destination, days }))
+    setError(null)
     setStep(2)
   }
 
@@ -53,6 +54,8 @@ export default function QuizContainer() {
 
   function handleError(message: string) {
     setError(message)
+    setWeather(null)
+    setPackingList(null)
     setScreen('quiz')
     setStep(1)
   }
