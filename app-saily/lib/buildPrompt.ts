@@ -1,0 +1,54 @@
+import type { QuizAnswers, WeatherData } from './types'
+
+const BAGGAGE_LABELS: Record<QuizAnswers['baggage'], string> = {
+  hand: 'hand luggage only',
+  checked: 'checked bag',
+  both: 'both hand luggage and checked bag',
+}
+
+const TRIP_LABELS: Record<QuizAnswers['tripType'], string> = {
+  beach: 'Beach',
+  city: 'city trip',
+  business: 'Business',
+  hiking: 'Hiking',
+}
+
+const PACKING_LABELS: Record<QuizAnswers['packingStyle'], string> = {
+  light: 'Pack light (only the essentials)',
+  heavy: 'Pack heavy (bring everything just in case)',
+}
+
+const TEMP_LABELS: Record<QuizAnswers['tempPreference'], string> = {
+  cold: 'Runs cold',
+  hot: 'Runs hot',
+  normal: 'normal',
+}
+
+export function buildGeminiPrompt(
+  answers: QuizAnswers,
+  weather: WeatherData | null
+): string {
+  const weatherLine = weather
+    ? `${weather.description}, ${weather.temperature}°C`
+    : 'weather data unavailable'
+
+  return `You are a smart travel packing assistant. Generate a packing list for the following trip:
+- Destination: ${answers.destination}
+- Duration: ${answers.days} days
+- Current weather: ${weatherLine}
+- Baggage: ${BAGGAGE_LABELS[answers.baggage]}
+- Trip type: ${TRIP_LABELS[answers.tripType]}
+- Packing style: ${PACKING_LABELS[answers.packingStyle]}
+- Temperature preference: ${TEMP_LABELS[answers.tempPreference]}
+
+Return a JSON object with this exact structure:
+{
+  "clothes": ["item1", "item2"],
+  "toiletries": ["item1", "item2"],
+  "documents": ["item1", "item2"],
+  "electronics": ["item1", "item2"],
+  "extras": ["item1", "item2"]
+}
+
+Be smart: pack more clothes for longer trips, add rain gear if weather is wet, add sunscreen if hot and sunny, adjust quantity based on packing style, adjust warmth of clothing based on temperature preference. Return only valid JSON, no other text.`
+}
