@@ -31,7 +31,9 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
     }
 
     run()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Run once on mount only — callbacks are stable for the lifetime of this screen
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
