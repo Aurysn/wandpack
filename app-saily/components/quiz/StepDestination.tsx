@@ -40,7 +40,10 @@ export default function StepDestination({
             min={1}
             max={90}
             value={days}
-            onChange={(e) => setDays(Number(e.target.value))}
+            onChange={(e) => {
+              const val = parseInt(e.target.value, 10)
+              setDays(isNaN(val) ? 1 : Math.max(1, val))
+            }}
             className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-gray-900 transition-colors"
           />
         </div>

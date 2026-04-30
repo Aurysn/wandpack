@@ -1,3 +1,5 @@
+'use client'
+
 interface ChoiceCardProps {
   emoji: string
   label: string
