@@ -11,7 +11,7 @@ interface StepTempPreferenceProps {
 const OPTIONS: { value: TempPreference; emoji: string; label: string }[] = [
   { value: 'cold', emoji: '🥶', label: 'I run cold' },
   { value: 'hot', emoji: '🥵', label: 'I run hot' },
-  { value: 'normal', emoji: '😊', label: 'Somewhere in between' },
+  { value: 'normal', emoji: '😊', label: 'In between' },
 ]
 
 export default function StepTempPreference({ initialValue, onNext }: StepTempPreferenceProps) {
