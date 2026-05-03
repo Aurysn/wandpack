@@ -27,7 +27,7 @@ export default function Home() {
       <div className="w-full max-w-md">
         <div className="mb-10 text-center">
           <h1 className="font-display text-2xl sm:text-3xl font-black text-white tracking-wide sm:tracking-widest uppercase">
-            <WandIcon /> Tripalis Packendo
+            <WandIcon /> Wandpack
           </h1>
           <p className="text-brand-text-secondary mt-2 text-sm tracking-wide">
             Your journey, perfectly packed

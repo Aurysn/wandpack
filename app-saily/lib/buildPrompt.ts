@@ -70,5 +70,7 @@ Return a JSON object with this exact structure:
   "extras": ["item1", "item2"]
 }
 
-Be smart: pack more clothes for longer trips, add rain gear if weather is wet, add sunscreen if hot and sunny, adjust quantity based on packing style, adjust warmth of clothing based on temperature preference. Return only valid JSON, no other text.`
+Be smart: pack more clothes for longer trips, add rain gear if weather is wet, add sunscreen if hot and sunny, adjust quantity based on packing style, adjust warmth of clothing based on temperature preference.
+
+IMPORTANT: For items with quantities, always use a single specific number — never ranges like "2-3" or "1-2". Pick the most appropriate single number based on the trip details. For example: "2 long sleeve shirts" not "2-3 long sleeve shirts". Return only valid JSON, no other text.`
 }

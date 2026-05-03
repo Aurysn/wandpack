@@ -11,7 +11,7 @@ const cinzel = Cinzel({
 })
 
 export const metadata: Metadata = {
-  title: 'Tripalis Packendo — Smart Packing Assistant',
+  title: 'Wandpack — Smart Packing Assistant',
   description: 'Your journey, perfectly packed',
 }
 
