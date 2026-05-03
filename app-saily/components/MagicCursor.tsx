@@ -85,7 +85,7 @@ export default function MagicCursor() {
       const dt = Math.min(time - lastTime, 50)
       lastTime = time
 
-      if (!ctx) return
+      if (!ctx || !canvas) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       for (let i = particles.length - 1; i >= 0; i--) {
