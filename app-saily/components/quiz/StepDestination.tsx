@@ -3,7 +3,12 @@ import { useState, useRef, useEffect } from 'react'
 import { useCityAutocomplete } from '@/hooks/useCityAutocomplete'
 import type { CitySuggestion } from '@/lib/types'
 
-const today = new Date().toLocaleDateString('en-CA')
+function getTomorrow() {
+  const d = new Date()
+  d.setDate(d.getDate() + 1)
+  return d.toLocaleDateString('en-CA')
+}
+const tomorrow = getTomorrow()
 
 const inputClass =
   'w-full px-4 py-3 rounded-xl border-2 border-brand-border bg-brand-surface focus:border-brand-gold focus:outline-none text-white placeholder-brand-text-muted transition-colors'
@@ -20,7 +25,7 @@ interface StepDestinationProps {
 export default function StepDestination({
   initialDestination = '',
   initialDays = 7,
-  initialDepartureDate = today,
+  initialDepartureDate = tomorrow,
   onNext,
 }: StepDestinationProps) {
   const [inputValue, setInputValue] = useState(initialDestination)
@@ -125,7 +130,7 @@ export default function StepDestination({
           <label className={labelClass}>Departure date</label>
           <input
             type="date"
-            min={today}
+            min={tomorrow}
             value={departureDate}
             onChange={(e) => setDepartureDate(e.target.value)}
             className={inputClass}

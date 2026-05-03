@@ -21,14 +21,25 @@ export interface CitySuggestion {
   lon: number
 }
 
+export interface DailyForecast {
+  date: string
+  dayName: string
+  tempMin: number
+  tempMax: number
+  description: string
+  emoji: string
+}
+
 export interface WeatherData {
   city: string
   country: string
   temperature: number
-  tempMin?: number
-  tempMax?: number
+  tempMin: number
+  tempMax: number
   description: string
   isForecast: boolean
+  requestedDays: number
+  dailyForecasts: DailyForecast[]
 }
 
 export interface PackingList {

@@ -5,32 +5,46 @@ interface WeatherSummaryProps {
 }
 
 export default function WeatherSummary({ weather }: WeatherSummaryProps) {
-  if (!weather) {
+  if (!weather || weather.dailyForecasts.length === 0) {
     return (
       <div className="rounded-2xl bg-brand-surface/60 border border-brand-border px-5 py-4 text-center text-brand-text-muted text-sm">
-        Weather data unavailable — packing list based on your preferences only.
+        Weather unavailable — packing list based on your trip details.
       </div>
     )
   }
 
-  const tempDisplay =
-    weather.isForecast && weather.tempMin !== undefined && weather.tempMax !== undefined
-      ? `${weather.tempMin}–${weather.tempMax}°C`
-      : `${weather.temperature}°C`
-
-  const subtext = weather.isForecast
-    ? `avg ${weather.temperature}°C · forecast for your trip`
-    : 'current conditions'
+  const { city, requestedDays, dailyForecasts } = weather
+  const isPartial = requestedDays > dailyForecasts.length
 
   return (
-    <div className="rounded-2xl bg-brand-surface/80 border border-brand-border/60 px-5 py-4 flex items-center gap-4 backdrop-blur-sm">
-      <span className="text-3xl shrink-0">🌤️</span>
-      <div>
-        <p className="font-semibold text-white">
-          {weather.city} · {tempDisplay}
+    <div className="rounded-2xl bg-brand-surface border border-brand-border/60 px-4 py-4">
+      <div className="flex items-baseline justify-between mb-3 gap-2">
+        <p className="font-semibold text-white text-sm">
+          {city} · {requestedDays} {requestedDays === 1 ? 'day' : 'days'}
         </p>
-        <p className="text-sm text-brand-text-secondary capitalize">{weather.description}</p>
-        <p className="text-xs text-brand-text-muted mt-0.5">{subtext}</p>
+        {isPartial && (
+          <span className="text-xs text-brand-text-muted shrink-0">Based on 5-day forecast</span>
+        )}
+      </div>
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+        {dailyForecasts.map((day, idx) => (
+          <div
+            key={day.date}
+            className={`flex flex-col items-center gap-1 rounded-xl px-3 py-2.5 shrink-0 min-w-[60px] border transition-colors ${
+              idx === 0
+                ? 'bg-brand-gold/10 border-brand-gold/40 shadow-gold-sm'
+                : 'bg-brand-bg border-brand-border/50'
+            }`}
+          >
+            <span className="text-xs font-medium tracking-wide text-brand-text-secondary uppercase">
+              {day.dayName}
+            </span>
+            <span className="text-xl leading-none">{day.emoji}</span>
+            <span className={`text-sm font-semibold ${idx === 0 ? 'text-brand-gold' : 'text-white'}`}>
+              {day.tempMax}°
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   )

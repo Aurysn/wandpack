@@ -19,9 +19,28 @@ const CATEGORIES: { key: keyof PackingList; emoji: string; title: string }[] = [
   { key: 'extras', emoji: '🎒', title: 'Extras' },
 ]
 
+function parseItem(raw: string): { quantity: number | null; displayName: string } {
+  const match = raw.match(/^(\d+)\s+(.+)$/)
+  if (match) {
+    const quantity = parseInt(match[1])
+    const displayName = match[2]
+      .replace(/\s*\([^)]*\)/g, '')
+      .split('/')[0]
+      .trim()
+    return { quantity, displayName }
+  }
+  const displayName = raw
+    .replace(/\s*\([^)]*\)/g, '')
+    .split('/')[0]
+    .trim()
+  return { quantity: null, displayName }
+}
+
 export default function ResultsScreen({ weather, packingList, destination, onStartOver }: ResultsScreenProps) {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set())
   const [customItems, setCustomItems] = useState<Partial<Record<keyof PackingList, string[]>>>({})
+  const [removedItems, setRemovedItems] = useState<Set<string>>(new Set())
+  const [quantities, setQuantities] = useState<Record<string, number>>({})
   const [view, setView] = useState<'list' | 'done'>('list')
 
   function toggle(key: string) {
@@ -31,6 +50,20 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
       else next.add(key)
       return next
     })
+  }
+
+  function removeItem(key: string) {
+    setRemovedItems((prev) => { const next = new Set(prev); next.add(key); return next })
+    setCheckedItems((prev) => {
+      const next = new Set(prev)
+      next.delete(key)
+      return next
+    })
+  }
+
+  function changeQuantity(key: string, delta: number, currentQty: number) {
+    const newQty = Math.max(1, currentQty + delta)
+    setQuantities((prev) => ({ ...prev, [key]: newQty }))
   }
 
   function addCustomItem(catKey: keyof PackingList, item: string) {
@@ -45,16 +78,35 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
       const regularItems = packingList[cat.key]
       const customCatItems = customItems[cat.key] ?? []
 
-      const packedRegular = regularItems.filter((item, idx) =>
-        checkedItems.has(`${cat.key}:${idx}:${item}`)
-      )
-      const packedCustom = customCatItems.filter((item, idx) =>
-        checkedItems.has(`${cat.key}:custom:${idx}:${item}`)
-      )
+      const packedRegular = regularItems
+        .map((item, idx) => {
+          const key = `${cat.key}:${idx}:${item}`
+          if (removedItems.has(key) || !checkedItems.has(key)) return null
+          const { quantity, displayName } = parseItem(item)
+          if (quantity !== null) {
+            const currentQty = quantities[key] ?? quantity
+            return `${currentQty} ${displayName}`
+          }
+          return displayName
+        })
+        .filter((x): x is string => x !== null)
+
+      const packedCustom = customCatItems
+        .map((item, idx) => {
+          const key = `${cat.key}:custom:${idx}:${item}`
+          if (removedItems.has(key) || !checkedItems.has(key)) return null
+          const { quantity, displayName } = parseItem(item)
+          if (quantity !== null) {
+            const currentQty = quantities[key] ?? quantity
+            return `${currentQty} ${displayName}`
+          }
+          return displayName
+        })
+        .filter((x): x is string => x !== null)
 
       return { ...cat, packedItems: [...packedRegular, ...packedCustom] }
     }).filter((cat) => cat.packedItems.length > 0)
-  }, [checkedItems, customItems, packingList])
+  }, [checkedItems, customItems, removedItems, quantities, packingList])
 
   const cityName = destination.split(',')[0].trim()
 
@@ -135,7 +187,11 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
           items={packingList[cat.key]}
           customItems={customItems[cat.key] ?? []}
           checkedItems={checkedItems}
+          removedItems={removedItems}
+          quantities={quantities}
           onToggle={toggle}
+          onRemoveItem={removeItem}
+          onChangeQuantity={changeQuantity}
           onAddCustomItem={(item) => addCustomItem(cat.key, item)}
         />
       ))}

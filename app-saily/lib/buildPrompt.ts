@@ -1,4 +1,4 @@
-import type { QuizAnswers, WeatherData } from './types'
+import type { QuizAnswers, WeatherData, DailyForecast } from './types'
 
 const BAGGAGE_LABELS: Record<QuizAnswers['baggage'], string> = {
   hand: 'Hand luggage only',
@@ -24,17 +24,31 @@ const TEMP_LABELS: Record<QuizAnswers['tempPreference'], string> = {
   normal: 'normal',
 }
 
+function buildWeatherNarrative(weather: WeatherData): string {
+  const range = `temperatures ${weather.tempMin}–${weather.tempMax}°C`
+  const forecasts: DailyForecast[] = weather.dailyForecasts
+
+  if (forecasts.length === 0) return `${range}, ${weather.description}`
+  if (forecasts.length === 1) return `${range}, ${forecasts[0].description}`
+
+  const descriptions = forecasts.map((d) => d.description)
+  const unique = Array.from(new Set(descriptions))
+  if (unique.length === 1) return `${range}, ${unique[0]} throughout`
+
+  const mid = Math.ceil(forecasts.length / 2)
+  const firstDescs = Array.from(new Set(descriptions.slice(0, mid))).join(' and ')
+  const laterDescs = Array.from(new Set(descriptions.slice(mid))).join(' and ')
+  if (firstDescs === laterDescs) return `${range}, ${firstDescs}`
+  return `${range}, ${firstDescs} for first ${mid} days then ${laterDescs}`
+}
+
 export function buildGeminiPrompt(
   answers: QuizAnswers,
   weather: WeatherData | null
 ): string {
   let weatherLine = 'weather data unavailable'
   if (weather) {
-    if (weather.isForecast && weather.tempMin !== undefined && weather.tempMax !== undefined) {
-      weatherLine = `Forecast during trip: avg ${weather.temperature}°C, range ${weather.tempMin}–${weather.tempMax}°C, ${weather.description}`
-    } else {
-      weatherLine = `Current conditions: ${weather.temperature}°C, ${weather.description}`
-    }
+    weatherLine = `${answers.destination}, ${answers.days} days, ${buildWeatherNarrative(weather)}`
   }
 
   return `You are a smart travel packing assistant. Generate a packing list for the following trip:
