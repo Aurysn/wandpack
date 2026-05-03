@@ -92,7 +92,7 @@ function ItemRow({ itemKey, rawName, checked, quantities, onToggle, onRemoveItem
       )}
       <button
         onClick={handleRemove}
-        className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity text-brand-text-muted hover:text-red-400 text-xs shrink-0 px-0.5"
+        className="opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(pointer:coarse)]:opacity-40 transition-opacity text-brand-text-muted hover:text-red-400 text-xs shrink-0 px-0.5"
         aria-label="Remove item"
       >
         ✕
