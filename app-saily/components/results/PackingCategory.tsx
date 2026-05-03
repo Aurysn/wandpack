@@ -17,7 +17,7 @@ interface PackingCategoryProps {
 }
 
 function parseItem(raw: string): { quantity: number | null; displayName: string } {
-  const match = raw.match(/^(\d+)\s+(.+)$/)
+  const match = raw.match(/^(\d+)x?\s+(.+)$/)
   if (match) {
     const quantity = parseInt(match[1])
     const displayName = match[2]
