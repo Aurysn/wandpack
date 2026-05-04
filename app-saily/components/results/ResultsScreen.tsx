@@ -2,16 +2,17 @@
 import { useState, useMemo } from 'react'
 import WeatherSummary from './WeatherSummary'
 import PackingCategory from './PackingCategory'
-import type { WeatherData, PackingList } from '@/lib/types'
+import type { WeatherData, PackingList, PackingCategoryKey, QuizAnswers, PackingEvaluation } from '@/lib/types'
 
 interface ResultsScreenProps {
   weather: WeatherData | null
   packingList: PackingList
+  answers: QuizAnswers
   destination: string
   onStartOver: () => void
 }
 
-const CATEGORIES: { key: keyof PackingList; emoji: string; title: string }[] = [
+const CATEGORIES: { key: PackingCategoryKey; emoji: string; title: string }[] = [
   { key: 'clothes', emoji: '👕', title: 'Clothes' },
   { key: 'toiletries', emoji: '🧴', title: 'Toiletries' },
   { key: 'documents', emoji: '📄', title: 'Documents' },
@@ -36,12 +37,14 @@ function parseItem(raw: string): { quantity: number | null; displayName: string 
   return { quantity: null, displayName }
 }
 
-export default function ResultsScreen({ weather, packingList, destination, onStartOver }: ResultsScreenProps) {
+export default function ResultsScreen({ weather, packingList, answers, destination, onStartOver }: ResultsScreenProps) {
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set())
-  const [customItems, setCustomItems] = useState<Partial<Record<keyof PackingList, string[]>>>({})
+  const [customItems, setCustomItems] = useState<Partial<Record<PackingCategoryKey, string[]>>>({})
   const [removedItems, setRemovedItems] = useState<Set<string>>(new Set())
   const [quantities, setQuantities] = useState<Record<string, number>>({})
   const [view, setView] = useState<'list' | 'done'>('list')
+  const [evaluation, setEvaluation] = useState<PackingEvaluation | null>(null)
+  const [evaluating, setEvaluating] = useState(false)
 
   function toggle(key: string) {
     setCheckedItems((prev) => {
@@ -66,7 +69,7 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
     setQuantities((prev) => ({ ...prev, [key]: newQty }))
   }
 
-  function addCustomItem(catKey: keyof PackingList, item: string) {
+  function addCustomItem(catKey: PackingCategoryKey, item: string) {
     setCustomItems((prev) => ({
       ...prev,
       [catKey]: [...(prev[catKey] ?? []), item],
@@ -110,6 +113,27 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
 
   const cityName = destination.split(',')[0].trim()
 
+  async function handleDonePacking() {
+    setView('done')
+    setEvaluating(true)
+    const allPackedItems = packedSummary.flatMap((cat) => cat.packedItems)
+    try {
+      const res = await fetch('/api/evaluate-packing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answers, weather, packedItems: allPackedItems }),
+      })
+      if (res.ok) {
+        const data: PackingEvaluation = await res.json()
+        setEvaluation(data)
+      }
+    } catch {
+      // silently skip on failure
+    } finally {
+      setEvaluating(false)
+    }
+  }
+
   if (view === 'done') {
     return (
       <div className="flex flex-col gap-4">
@@ -118,6 +142,38 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
             Here&apos;s what you&apos;re bringing to {cityName} 🗺️
           </h2>
         </div>
+
+        {evaluating && (
+          <div className="rounded-2xl border border-brand-border bg-brand-surface px-5 py-4 text-center text-brand-text-secondary text-sm">
+            Evaluating your packing list... 🪄
+          </div>
+        )}
+
+        {!evaluating && evaluation && (
+          <div className={`rounded-2xl border px-5 py-4 flex flex-col gap-2 ${
+            evaluation.score === 'great'
+              ? 'border-green-700/40 bg-green-950/30'
+              : evaluation.score === 'good'
+              ? 'border-brand-gold/30 bg-brand-surface'
+              : 'border-red-700/40 bg-red-950/20'
+          }`}>
+            <p className="font-semibold text-sm text-white">
+              {evaluation.score === 'great' && '✅ '}
+              {evaluation.score === 'good' && '👍 '}
+              {evaluation.score === 'missing-essentials' && '⚠️ '}
+              {evaluation.message}
+            </p>
+            {evaluation.warnings.length > 0 && (
+              <ul className="flex flex-col gap-1 mt-1">
+                {evaluation.warnings.map((w, i) => (
+                  <li key={i} className="text-xs text-brand-text-muted flex items-center gap-1.5">
+                    <span className="text-red-400">•</span> {w}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
         {packedSummary.length === 0 ? (
           <div className="rounded-2xl border border-brand-border bg-brand-surface p-5 text-center text-brand-text-secondary text-sm">
@@ -177,7 +233,7 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
 
   return (
     <div className="flex flex-col gap-4">
-      <WeatherSummary weather={weather} />
+      <WeatherSummary weather={weather} weatherSummary={packingList.weatherSummary} />
       {CATEGORIES.map((cat) => (
         <PackingCategory
           key={cat.key}
@@ -196,7 +252,7 @@ export default function ResultsScreen({ weather, packingList, destination, onSta
         />
       ))}
       <button
-        onClick={() => setView('done')}
+        onClick={handleDonePacking}
         className="w-full py-3.5 rounded-xl bg-brand-gold text-brand-bg font-bold text-base hover:bg-brand-gold-hover transition-colors shadow-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
       >
         Done Packing 🧳

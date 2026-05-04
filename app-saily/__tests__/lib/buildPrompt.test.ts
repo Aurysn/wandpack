@@ -4,6 +4,7 @@ import type { QuizAnswers, WeatherData } from '@/lib/types'
 const answers: QuizAnswers = {
   destination: 'Tokyo',
   days: 7,
+  departureDate: '2026-06-01',
   baggage: 'checked',
   tripType: 'city',
   packingStyle: 'light',
@@ -12,8 +13,14 @@ const answers: QuizAnswers = {
 
 const weather: WeatherData = {
   city: 'Tokyo',
+  country: 'JP',
   temperature: 18,
+  tempMin: 14,
+  tempMax: 22,
   description: 'light rain',
+  isForecast: true,
+  requestedDays: 7,
+  dailyForecasts: [],
 }
 
 describe('buildGeminiPrompt', () => {
@@ -21,7 +28,8 @@ describe('buildGeminiPrompt', () => {
     const prompt = buildGeminiPrompt(answers, weather)
     expect(prompt).toContain('Tokyo')
     expect(prompt).toContain('7 days')
-    expect(prompt).toContain('18°C')
+    expect(prompt).toContain('14')
+    expect(prompt).toContain('22')
     expect(prompt).toContain('light rain')
     expect(prompt).toContain('Checked')
     expect(prompt).toContain('City')

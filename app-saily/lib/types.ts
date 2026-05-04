@@ -42,12 +42,16 @@ export interface WeatherData {
   dailyForecasts: DailyForecast[]
 }
 
-export interface PackingList {
-  clothes: string[]
-  toiletries: string[]
-  documents: string[]
-  electronics: string[]
-  extras: string[]
+export type PackingCategoryKey = 'clothes' | 'toiletries' | 'documents' | 'electronics' | 'extras'
+
+export interface PackingList extends Record<PackingCategoryKey, string[]> {
+  weatherSummary?: string
+}
+
+export interface PackingEvaluation {
+  score: 'great' | 'good' | 'missing-essentials'
+  message: string
+  warnings: string[]
 }
 
 export type AppScreen = 'quiz' | 'loading' | 'results'

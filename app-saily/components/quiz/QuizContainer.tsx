@@ -84,6 +84,7 @@ export default function QuizContainer() {
       <ResultsScreen
         weather={weather}
         packingList={packingList}
+        answers={answers as QuizAnswers}
         destination={answers.destination ?? ''}
         onStartOver={handleStartOver}
       />

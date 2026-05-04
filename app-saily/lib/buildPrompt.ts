@@ -1,4 +1,4 @@
-import type { QuizAnswers, WeatherData, DailyForecast } from './types'
+import type { QuizAnswers, WeatherData, DailyForecast, PackingEvaluation } from './types'
 
 const BAGGAGE_LABELS: Record<QuizAnswers['baggage'], string> = {
   hand: 'Hand luggage only',
@@ -67,10 +67,46 @@ Return a JSON object with this exact structure:
   "toiletries": ["item1", "item2"],
   "documents": ["item1", "item2"],
   "electronics": ["item1", "item2"],
-  "extras": ["item1", "item2"]
+  "extras": ["item1", "item2"],
+  "weatherSummary": "2-3 sentence conversational summary of the weather during this trip and what it means for packing. Example: 'Tokyo will be cool and rainy for the first few days, warming up towards the end of your trip. Expect temperatures between 8–19°C. Pack layers and a waterproof jacket for the early days.'"
 }
 
 Be smart: pack more clothes for longer trips, add rain gear if weather is wet, add sunscreen if hot and sunny, adjust quantity based on packing style, adjust warmth of clothing based on temperature preference.
 
 IMPORTANT: For items with quantities, always use a single specific number — never ranges like "2-3" or "1-2". Pick the most appropriate single number based on the trip details. For example: "2 long sleeve shirts" not "2-3 long sleeve shirts". Return only valid JSON, no other text.`
+}
+
+export function buildEvaluationPrompt(
+  answers: QuizAnswers,
+  weather: WeatherData | null,
+  packedItems: string[]
+): string {
+  const weatherLine = weather
+    ? `${weather.description}, ${weather.tempMin}–${weather.tempMax}°C`
+    : 'weather data unavailable'
+
+  const itemsList = packedItems.length > 0 ? packedItems.join(', ') : 'nothing'
+
+  return `You are evaluating a travel packing list. Be conversational, specific, and helpful — not generic.
+
+Trip details:
+- Destination: ${answers.destination}
+- Duration: ${answers.days} days
+- Trip type: ${TRIP_LABELS[answers.tripType]}
+- Weather: ${weatherLine}
+- Packed items: ${itemsList}
+
+Return ONLY valid JSON with this exact structure:
+{
+  "score": "great" | "good" | "missing-essentials",
+  "message": "2-3 sentence evaluation referencing the specific destination and weather",
+  "warnings": ["specific missing critical item if any"]
+}
+
+Score guide:
+- "great": all essentials covered and well prepared for the conditions
+- "good": basics covered but something notable is missing or could be improved
+- "missing-essentials": clearly missing important items for this trip type or weather
+
+Keep warnings as a short flat list of specific items only (e.g. "rain jacket", "phone charger"). Return only valid JSON, no other text.`
 }

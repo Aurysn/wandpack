@@ -2,9 +2,10 @@ import type { WeatherData } from '@/lib/types'
 
 interface WeatherSummaryProps {
   weather: WeatherData | null
+  weatherSummary?: string
 }
 
-export default function WeatherSummary({ weather }: WeatherSummaryProps) {
+export default function WeatherSummary({ weather, weatherSummary }: WeatherSummaryProps) {
   if (!weather || weather.dailyForecasts.length === 0) {
     return (
       <div className="rounded-2xl bg-brand-surface/60 border border-brand-border px-5 py-4 text-center text-brand-text-muted text-sm">
@@ -46,6 +47,9 @@ export default function WeatherSummary({ weather }: WeatherSummaryProps) {
           </div>
         ))}
       </div>
+      {weatherSummary && (
+        <p className="mt-3 text-xs text-brand-text-muted leading-relaxed">{weatherSummary}</p>
+      )}
     </div>
   )
 }
