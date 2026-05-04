@@ -42,9 +42,8 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
   const [customItems, setCustomItems] = useState<Partial<Record<PackingCategoryKey, string[]>>>({})
   const [removedItems, setRemovedItems] = useState<Set<string>>(new Set())
   const [quantities, setQuantities] = useState<Record<string, number>>({})
-  const [view, setView] = useState<'list' | 'done'>('list')
+  const [view, setView] = useState<'list' | 'evaluating' | 'done'>('list')
   const [evaluation, setEvaluation] = useState<PackingEvaluation | null>(null)
-  const [evaluating, setEvaluating] = useState(false)
 
   function toggle(key: string) {
     setCheckedItems((prev) => {
@@ -114,8 +113,7 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
   const cityName = destination.split(',')[0].trim()
 
   async function handleDonePacking() {
-    setView('done')
-    setEvaluating(true)
+    setView('evaluating')
     const allPackedItems = packedSummary.flatMap((cat) => cat.packedItems)
     try {
       const res = await fetch('/api/evaluate-packing', {
@@ -130,8 +128,52 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
     } catch {
       // silently skip on failure
     } finally {
-      setEvaluating(false)
+      setView('done')
     }
+  }
+
+  if (view === 'evaluating') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8 py-8">
+        <div className="text-center">
+          <h1 className="font-display text-2xl font-black text-white tracking-widest uppercase">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 28 28"
+              className="inline-block w-6 h-6 text-brand-gold fill-current align-middle relative -top-0.5 mr-1"
+              aria-hidden="true"
+            >
+              <path d="M14 2 L15.4 12.6 L26 14 L15.4 15.4 L14 26 L12.6 15.4 L2 14 L12.6 12.6 Z" />
+              <path d="M23 5 L23.5 7.5 L26 8 L23.5 8.5 L23 11 L22.5 8.5 L20 8 L22.5 7.5 Z" opacity="0.55" />
+              <circle cx="5.5" cy="21.5" r="1.1" opacity="0.35" />
+            </svg>
+            Wandpack
+          </h1>
+        </div>
+
+        <div className="relative w-24 h-24">
+          <div className="absolute inset-0 rounded-full border-4 border-brand-border" />
+          <div className="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin" />
+          <div className="absolute inset-3 rounded-full border-2 border-brand-gold/20 border-b-brand-gold/60 animate-spin [animation-direction:reverse] [animation-duration:1.5s]" />
+          <div className="absolute inset-0 flex items-center justify-center text-2xl">🪄</div>
+        </div>
+
+        <div className="text-center flex flex-col gap-2">
+          <p className="text-base font-semibold text-white">Evaluating your packing list...</p>
+          <p className="text-sm text-brand-text-secondary">Checking everything against your trip details</p>
+        </div>
+
+        <div className="flex gap-2 items-center">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse"
+              style={{ animationDelay: `${i * 150}ms` }}
+            />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   if (view === 'done') {
@@ -143,13 +185,7 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
           </h2>
         </div>
 
-        {evaluating && (
-          <div className="rounded-2xl border border-brand-border bg-brand-surface px-5 py-4 text-center text-brand-text-secondary text-sm">
-            Evaluating your packing list... 🪄
-          </div>
-        )}
-
-        {!evaluating && evaluation && (
+        {evaluation && (
           <div className={`rounded-2xl border px-5 py-4 flex flex-col gap-2 ${
             evaluation.score === 'great'
               ? 'border-green-700/40 bg-green-950/30'
