@@ -65,8 +65,7 @@ export default function LoadingScreen({ answers, onComplete, onError }: LoadingS
       cancelled = true
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // Run once on mount only — callbacks are stable for the lifetime of this screen
-  }, [])
+  }, []) // intentional: run once on mount, callbacks are stable for this screen's lifetime
 
   const subtext =
     retrying || attempt > 1 ? 'Still working on it...' : 'Weaving your perfect packing spell...'

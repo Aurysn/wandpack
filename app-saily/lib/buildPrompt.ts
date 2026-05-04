@@ -1,4 +1,4 @@
-import type { QuizAnswers, WeatherData, DailyForecast, PackingEvaluation } from './types'
+import type { QuizAnswers, WeatherData, DailyForecast } from './types'
 
 const BAGGAGE_LABELS: Record<QuizAnswers['baggage'], string> = {
   hand: 'Hand luggage only',
