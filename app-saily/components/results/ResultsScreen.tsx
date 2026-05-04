@@ -134,31 +134,15 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
 
   if (view === 'evaluating') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-8 py-8">
-        <div className="text-center">
-          <h1 className="font-display text-2xl font-black text-white tracking-widest uppercase">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 28 28"
-              className="inline-block w-6 h-6 text-brand-gold fill-current align-middle relative -top-0.5 mr-1"
-              aria-hidden="true"
-            >
-              <path d="M14 2 L15.4 12.6 L26 14 L15.4 15.4 L14 26 L12.6 15.4 L2 14 L12.6 12.6 Z" />
-              <path d="M23 5 L23.5 7.5 L26 8 L23.5 8.5 L23 11 L22.5 8.5 L20 8 L22.5 7.5 Z" opacity="0.55" />
-              <circle cx="5.5" cy="21.5" r="1.1" opacity="0.35" />
-            </svg>
-            Wandpack
-          </h1>
-        </div>
-
-        <div className="relative w-24 h-24">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <div className="relative w-20 h-20">
           <div className="absolute inset-0 rounded-full border-4 border-brand-border" />
           <div className="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin" />
           <div className="absolute inset-3 rounded-full border-2 border-brand-gold/20 border-b-brand-gold/60 animate-spin [animation-direction:reverse] [animation-duration:1.5s]" />
           <div className="absolute inset-0 flex items-center justify-center text-2xl">🪄</div>
         </div>
 
-        <div className="text-center flex flex-col gap-2">
+        <div className="text-center flex flex-col gap-1.5">
           <p className="text-base font-semibold text-white">Evaluating your packing list...</p>
           <p className="text-sm text-brand-text-secondary">Checking everything against your trip details</p>
         </div>
