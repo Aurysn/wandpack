@@ -134,7 +134,7 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
 
   if (view === 'evaluating') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+      <div className="fixed inset-0 z-50 bg-brand-bg flex flex-col items-center justify-center gap-6">
         <div className="relative w-20 h-20">
           <div className="absolute inset-0 rounded-full border-4 border-brand-border" />
           <div className="absolute inset-0 rounded-full border-4 border-brand-gold border-t-transparent animate-spin" />
