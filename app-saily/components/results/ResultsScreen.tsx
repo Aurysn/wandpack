@@ -271,12 +271,14 @@ export default function ResultsScreen({ weather, packingList, answers, destinati
           onAddCustomItem={(item) => addCustomItem(cat.key, item)}
         />
       ))}
-      <button
-        onClick={handleDonePacking}
-        className="w-full py-3.5 rounded-xl bg-brand-gold text-brand-bg font-bold text-base hover:bg-brand-gold-hover transition-colors shadow-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
-      >
-        Done Packing 🧳
-      </button>
+      <div className="sticky bottom-0 -mx-4 px-4 pt-3 pb-4 bg-gradient-to-t from-brand-bg via-brand-bg to-transparent">
+        <button
+          onClick={handleDonePacking}
+          className="w-full py-3.5 rounded-xl bg-brand-gold text-brand-bg font-bold text-base hover:bg-brand-gold-hover transition-colors shadow-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg"
+        >
+          Done Packing 🧳
+        </button>
+      </div>
     </div>
   )
 }
